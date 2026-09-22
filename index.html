@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Paklijst Couples Experience</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#edefe8;
+  --card:#ffffff;
+  --ink:#1d2b24;
+  --muted:#5c6b62;
+  --line:#d8ddd2;
+  --den:#1f5c42;
+  --den-deep:#14382a;
+  --hesje:#e86f14;
+  --hesje-soft:#fdeadb;
+  --done:#8aa294;
+  --check-bg:#f4f6f1;
+  --tag-bg:#14382a;
+  --tag-ink:#e9f2ec;
+  --shadow:0 1px 3px rgba(20,40,30,.10);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#101a15;
+    --card:#18251f;
+    --ink:#e7efe9;
+    --muted:#93a59a;
+    --line:#28382f;
+    --den:#5fae8b;
+    --den-deep:#0c1712;
+    --hesje:#f4863a;
+    --hesje-soft:#3a2413;
+    --done:#4f6157;
+    --check-bg:#12201a;
+    --tag-bg:#25382e;
+    --tag-ink:#dcebe2;
+    --shadow:0 1px 3px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#101a15;
+  --card:#18251f;
+  --ink:#e7efe9;
+  --muted:#93a59a;
+  --line:#28382f;
+  --den:#5fae8b;
+  --den-deep:#0c1712;
+  --hesje:#f4863a;
+  --hesje-soft:#3a2413;
+  --done:#4f6157;
+  --check-bg:#12201a;
+  --tag-bg:#25382e;
+  --tag-ink:#dcebe2;
+  --shadow:0 1px 3px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:'Barlow Semi Condensed',system-ui,-apple-system,'Segoe UI',sans-serif;
+  background:var(--bg);color:var(--ink);
+  min-height:100vh;padding-bottom:40px;
+}
+.wrap{max-width:640px;margin:0 auto;padding:0 14px}
+
+/* ── bagagelabel-header ── */
+header{
+  background:var(--den-deep);color:#eef6f0;
+  padding:18px 0 14px;
+  border-bottom:4px solid var(--hesje);
+}
+header .wrap{display:flex;flex-direction:column;gap:10px}
+.label-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+h1{font-size:1.45rem;font-weight:800;line-height:1.1;letter-spacing:.2px}
+h1 small{display:block;font-size:.8rem;font-weight:600;color:#a9c4b4;letter-spacing:1px;margin-bottom:2px}
+.weights{display:flex;gap:6px;flex-wrap:wrap}
+.wtag{
+  background:var(--hesje);color:#fff;font-weight:700;font-size:.72rem;
+  padding:3px 8px;border-radius:3px;letter-spacing:.3px;white-space:nowrap;
+}
+.wtag.alt{background:rgba(255,255,255,.14);color:#dcebe2}
+.progress-row{display:flex;align-items:center;gap:10px}
+.pbar{flex:1;height:8px;background:rgba(255,255,255,.15);border-radius:99px;overflow:hidden}
+.pbar>div{height:100%;background:var(--hesje);border-radius:99px;width:0;transition:width .3s ease}
+.pcount{font-size:.82rem;font-weight:700;color:#cfe3d6;white-space:nowrap}
+
+/* ── tabs ── */
+nav{
+  position:sticky;top:0;z-index:10;background:var(--bg);
+  padding:10px 0 8px;border-bottom:1px solid var(--line);
+}
+nav .wrap{display:flex;gap:6px}
+.tab{
+  flex:1;border:1px solid var(--line);background:var(--card);color:var(--ink);
+  font-family:inherit;font-size:.84rem;font-weight:600;
+  padding:8px 2px;border-radius:8px;cursor:pointer;min-width:0;
+  display:flex;flex-direction:column;align-items:center;gap:1px;
+}
+.tab>span:first-child{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tab .rest{font-size:.68rem;font-weight:600;color:var(--muted)}
+.tab.active{background:var(--den);border-color:var(--den);color:#fff}
+.tab.active .rest{color:rgba(255,255,255,.8)}
+.tab .rest.klaar{color:var(--den);font-weight:700}
+.tab.active .rest.klaar{color:#fff}
+
+/* ── panel-koppen ── */
+.panel{display:none;padding-top:14px}
+.panel.active{display:block}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+.pname{display:flex;align-items:center;gap:8px;font-size:1.15rem;font-weight:800}
+.pname button{
+  border:none;background:none;color:var(--muted);cursor:pointer;font-size:.95rem;padding:4px;
+}
+.pname input{
+  font-family:inherit;font-size:1.1rem;font-weight:800;color:var(--ink);
+  background:var(--card);border:1px solid var(--den);border-radius:6px;padding:2px 8px;width:150px;
+}
+.hidecheck{
+  font-size:.78rem;font-weight:600;color:var(--muted);
+  display:flex;align-items:center;gap:5px;cursor:pointer;user-select:none;
+}
+.hidecheck input{accent-color:var(--den);width:15px;height:15px}
+
+/* ── secties & items ── */
+.sec{background:var(--card);border:1px solid var(--line);border-radius:10px;margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow)}
+.sec-h{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:10px 12px;border-bottom:1px solid var(--line);
+}
+.sec-h .t{font-weight:700;font-size:.95rem;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.sec-h .badge{
+  font-size:.68rem;font-weight:700;background:var(--tag-bg);color:var(--tag-ink);
+  padding:2px 7px;border-radius:3px;letter-spacing:.3px;white-space:nowrap;
+}
+.sec-h .cnt{font-size:.75rem;font-weight:600;color:var(--muted);white-space:nowrap}
+.item{
+  display:flex;align-items:flex-start;gap:11px;
+  padding:11px 12px;border-bottom:1px solid var(--line);cursor:pointer;user-select:none;
+}
+.item:last-child{border-bottom:none}
+.item .box{
+  flex:none;width:24px;height:24px;margin-top:1px;border-radius:6px;
+  border:2px solid var(--den);background:var(--check-bg);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:.85rem;font-weight:800;transition:background .12s;
+}
+.item.done .box{background:var(--den);border-color:var(--den)}
+.item .txt{flex:1;min-width:0}
+.item .lbl{font-size:.98rem;font-weight:600;line-height:1.3}
+.item .tip{font-size:.8rem;color:var(--muted);line-height:1.35;margin-top:2px}
+.item.done .lbl{color:var(--done);text-decoration:line-through;text-decoration-thickness:1.5px}
+.item.done .tip{color:var(--done)}
+.sec.klaar .sec-h .cnt{color:var(--den);font-weight:700}
+.allklaar{
+  display:none;text-align:center;padding:26px 16px;color:var(--muted);font-weight:600;
+}
+.allklaar .big{font-size:2rem;display:block;margin-bottom:6px}
+
+/* ── weer ── */
+.wx-title{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line);font-weight:700;font-size:.95rem}
+.wx-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line)}
+.wx-row .d{flex:none;width:70px;font-weight:700;font-size:.86rem}
+.wx-row .ic{flex:none;font-size:1.2rem}
+.wx-row .tmp{flex:none;width:64px;font-weight:700;font-size:.9rem}
+.wx-row .rest{flex:1;font-size:.78rem;color:var(--muted);line-height:1.3}
+.wx-advies{padding:10px 12px;font-size:.86rem;line-height:1.45;border-bottom:1px solid var(--line)}
+.wx-foot{padding:8px 12px;font-size:.72rem;color:var(--muted)}
+.extra-note{
+  background:var(--hesje-soft);border:1px dashed var(--hesje);border-radius:10px;
+  padding:10px 14px;margin-bottom:12px;font-size:.86rem;line-height:1.45;color:var(--ink);
+}
+
+/* ── tips ── */
+.tips .sec{padding:4px 0}
+.rule{display:flex;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);align-items:flex-start}
+.rule:last-child{border-bottom:none}
+.rule .ic{flex:none;font-size:1.05rem;margin-top:1px}
+.rule p{font-size:.9rem;line-height:1.45}
+.rule p b{font-weight:700}
+.rule p a{color:var(--den);font-weight:700}
+.motto{
+  background:var(--hesje-soft);border:1px dashed var(--hesje);border-radius:10px;
+  padding:12px 14px;margin-bottom:12px;font-weight:700;font-size:.95rem;text-align:center;color:var(--ink);
+}
+.reset{
+  width:100%;margin-top:6px;padding:11px;border-radius:8px;border:1px solid var(--line);
+  background:var(--card);color:var(--muted);font-family:inherit;font-weight:600;font-size:.88rem;cursor:pointer;
+}
+.reset.arm{border-color:var(--hesje);color:var(--hesje)}
+.item .cart{
+  flex:none;border:none;background:none;font-size:1.05rem;cursor:pointer;
+  padding:4px;margin:-4px -4px 0 0;opacity:.32;filter:grayscale(1);
+}
+.item.miss .cart{opacity:1;filter:none}
+.item.miss{background:var(--hesje-soft)}
+.item.miss .lbl .koop{color:var(--hesje);font-size:.75rem;font-weight:700;white-space:nowrap}
+
+/* ── boodschappen-FAB & paneel ── */
+.fab{
+  position:fixed;right:14px;bottom:16px;z-index:20;
+  background:var(--hesje);color:#fff;border:none;border-radius:99px;
+  padding:12px 17px;font-family:inherit;font-weight:800;font-size:.92rem;
+  box-shadow:0 4px 14px rgba(0,0,0,.28);cursor:pointer;display:none;align-items:center;gap:7px;
+}
+.fab.show{display:flex}
+.ovl{position:fixed;inset:0;z-index:30;background:rgba(8,18,13,.55);display:none;align-items:flex-end;justify-content:center}
+.ovl.show{display:flex}
+.sheet{
+  background:var(--bg);width:100%;max-width:640px;max-height:86vh;overflow:auto;
+  border-radius:16px 16px 0 0;padding:16px 14px 26px;
+}
+.sheet-h{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.sheet h2{font-size:1.15rem;font-weight:800}
+.sheet .sub{font-size:.8rem;color:var(--muted);margin:2px 0 12px}
+.sheet .xbtn{border:none;background:var(--card);border:1px solid var(--line);border-radius:8px;color:var(--ink);font-size:1rem;padding:5px 10px;cursor:pointer}
+.shop-group{font-weight:700;font-size:.85rem;color:var(--muted);margin:12px 2px 5px}
+.shop-item{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-bottom:6px}
+.shop-item .lbl{flex:1;font-size:.92rem;font-weight:600;line-height:1.3}
+.shop-item .lbl a{display:block;font-size:.76rem;color:var(--den);font-weight:700;text-decoration:none;margin-top:1px}
+.shop-item .geregeld{flex:none;border:1px solid var(--line);background:var(--check-bg);color:var(--ink);border-radius:6px;font-family:inherit;font-size:.76rem;font-weight:700;padding:6px 9px;cursor:pointer;white-space:nowrap}
+.empty-shop{text-align:center;color:var(--muted);padding:26px 0;font-weight:600}
+.sheet-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.sheet-actions button,.sheet-actions a{
+  flex:1 1 30%;text-align:center;padding:12px 6px;border-radius:8px;font-family:inherit;
+  font-weight:700;font-size:.88rem;cursor:pointer;text-decoration:none;white-space:nowrap;
+}
+.btn-p{background:var(--den);color:#fff;border:none}
+.btn-s{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+
+footer{margin-top:22px;text-align:center;font-size:.72rem;color:var(--muted)}
+footer a{color:var(--muted)}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="label-top">
+      <h1><small>COUPLES EXPERIENCE · 4M &amp; ARISE</small>Paklijst &amp; inpakhulp</h1>
+    </div>
+    <div class="weights">
+      <span class="wtag">Backpack: 70–90 L · max 15 kg p.p.</span>
+      <span class="wtag alt">Dagrugzak: 1 p.p. · ±5 kg / 20 L</span>
+    </div>
+    <div class="progress-row">
+      <div class="pbar"><div id="pfill"></div></div>
+      <span class="pcount" id="pcount">0 / 0</span>
+    </div>
+  </div>
+</header>
+
+<nav><div class="wrap" id="tabs"></div></nav>
+
+<main class="wrap" id="main"></main>
+
+<button class="fab" id="fab">🛒 Nog kopen · <span id="fabn">0</span></button>
+
+<div class="ovl" id="ovl">
+  <div class="sheet">
+    <div class="sheet-h">
+      <h2>🛒 Boodschappenlijst</h2>
+      <button class="xbtn" id="ovlx">✕</button>
+    </div>
+    <p class="sub">Alles wat jullie als "heb ik niet" hebben gemarkeerd. Items met 🔥 kun je ook huren via Surviking. Tik op <b>geregeld</b> zodra je het gekocht, geleend of gehuurd hebt.</p>
+    <div id="shoplist"></div>
+    <div class="sheet-actions">
+      <button class="btn-p" id="copyshop">Kopieer lijst</button>
+      <a class="btn-s" href="https://www.decathlon.nl" target="_blank" rel="noopener">decathlon.nl</a>
+      <a class="btn-s" href="https://www.surviking.nl/pro/4m" target="_blank" rel="noopener">Surviking (huren)</a>
+    </div>
+  </div>
+</div>
+
+<footer>Bron: <a href="https://www.4m.nl/paklijst-couples-experience" target="_blank" rel="noopener">4m.nl/paklijst-couples-experience</a> · vinkjes worden op dit apparaat bewaard</footer>
+
+<script>
+(function(){
+"use strict";
+var STORE_KEY="ce-paklijst-v2";
+
+/* ───────── data — officiële paklijst 4m.nl ───────── */
+var personSections=[
+ {id:"aan",icon:"👕",title:"Aan bij aankomst",badge:"parkeerplaats",items:[
+  {id:"natvies",l:"Kleding aan die nat en vies mag worden"},
+  {id:"korte",l:"Korte broek (legging of strakke sportbroek kan ook)",t:"GEEN spijkerbroek of joggingbroek: je broek kan nat worden en dan moet je er nog geruime tijd mee lopen. Een afritsbare loopbroek is een goede optie — bij minder weer kan er een lange broek overheen die je uit kunt trekken."},
+  {id:"lagen",l:"Meerdere lagen bovenkleding om warm te blijven",t:"Bijvoorbeeld een dun wind-/waterdicht jasje als laatste laag. Dunne lagen werken beter dan één dikke."},
+  {id:"avondkleding",l:"Warme kleding voor 's avonds ín je dagrugzak",t:"Ook als het mooi weer is! Je kunt pas 's avonds laat bij je backpack."},
+  {id:"schoen",l:"Stevige waterdichte berg-/wandelschoenen",t:"Sportschoenen volstaan niet."},
+  {id:"bijbelhand",l:"Bijbel binnen handbereik"}
+ ]},
+ {id:"slaap",icon:"🛌",title:"Backpack · Slaapspullen",badge:"incl. regenhoes",items:[
+  {id:"slaapzak",l:"Slaapzak (voor temperaturen onder 10 °C) 🔥",t:"Lenen, tweedehands of huren via Surviking — voor eenmalig gebruik is aanschaf zonde."},
+  {id:"mat",l:"Slaapmat 🔥 / kussen (iso)",t:"Een isolerende mat maakt écht verschil."},
+  {id:"toiletspullen",l:"Eigen toiletspullen"},
+  {id:"zaklamp",l:"Zaklamp 🔥"},
+  {id:"regenhoes",l:"Regenhoes om je backpack"}
+ ]},
+ {id:"kleding",icon:"🧦",title:"Backpack · Kleding",badge:"meerdere dunne lagen",items:[
+  {id:"broek2",l:"Stevige broek / korte broek / afritsbroek 🔥"},
+  {id:"jas",l:"Warme jas 🔥",t:"Voor 's avonds in het bivak."},
+  {id:"shirts",l:"Shirt met lange mouwen + shirt met korte mouwen"},
+  {id:"fleece",l:"Sweater of fleecevest 🔥"},
+  {id:"thermo",l:"Ondergoed (thermo)"},
+  {id:"nacht",l:"Ondergoed voor 's nachts (droog)"},
+  {id:"sokken",l:"Sokken",t:"Tip: 4 paar."},
+  {id:"pet",l:"Hoofddeksel: pet, muts o.i.d. 🔥"},
+  {id:"regen",l:"Regenjas / regenbroek 🔥",t:"Voor dit weekend zijn buien voorspeld (zie het weer onder Tips) — beide mee dus."},
+  {id:"gympen",l:"Lichte schoenen (gympen) voor in het bivak",t:"Als je dat fijn vindt om even uit je bergschoenen te kunnen."},
+  {id:"badkleding",l:"Badkleding: bikini / badpak / zwembroek + handdoek",t:"Staat expliciet op de lijst — er wordt dus water verwacht 😉"},
+  {id:"zonnebril",l:"Zonnebril",t:"Tip van de crew."}
+ ]},
+ {id:"eten",icon:"🍴",title:"Backpack · Koken en eten",items:[
+  {id:"spons",l:"Schuursponsje"},
+  {id:"bord",l:"Bord of eetbakje"},
+  {id:"bestek",l:"(Zak)mes, lepel en vork",t:"Tip: een spork scheelt gewicht en afwas (shop.4m.nl)."}
+ ]},
+ {id:"dagbasis",icon:"🎒",title:"Dagrugzak · Papieren &amp; basis",badge:"±5 kg · heupband",items:[
+  {id:"pas",l:"Paspoort of ID-kaart (waterdicht verpakt)"},
+  {id:"polis",l:"Verzekeringspolis"},
+  {id:"ice",l:"ICE-nummer op papier",t:"In Case of Emergency: telefoonnummer van het thuisfront."},
+  {id:"bijbel",l:"Bijbel",t:"Draag je altijd bij je."},
+  {id:"drogesok",l:"Droge sokken (1 paar)"},
+  {id:"water",l:"Waterfles(sen) voor minimaal 1 liter water",t:"Per persoon minimaal 1 liter. Bidon in de 4M-shop."},
+  {id:"hoofdlamp",l:"Hoofdlamp"},
+  {id:"hesje",l:"Veiligheidshesje",t:"Verplicht op de openbare weg."}
+ ]},
+ {id:"dagverzorging",icon:"🩹",title:"Dagrugzak · Verzorging",items:[
+  {id:"wcpapier",l:"Toiletpapier of zakdoekjes"},
+  {id:"medicijnen",l:"Eigen medicijnen"},
+  {id:"dhanddoek",l:"Handdoek"},
+  {id:"zonnebrand",l:"Zonnebrandcrème"},
+  {id:"teek",l:"Anti-tekenmiddel + tekentang"},
+  {id:"mug",l:"Anti-mug (Deet, Care Plus)"},
+  {id:"pleisters",l:"(Blaar)pleisters"},
+  {id:"paracetamol",l:"Paracetamol / ibuprofen"},
+  {id:"plastuit",l:"Plastuit (optioneel voor vrouwen)"}
+ ]},
+ {id:"dagoverig",icon:"✏️",title:"Dagrugzak · Eten &amp; overig",items:[
+  {id:"pen",l:"Pen &amp; notitieboekje"},
+  {id:"zitzak",l:"Plastic zak o.i.d. om op te zitten"},
+  {id:"dagbord",l:"Stevig bord of eetbakje"},
+  {id:"mok",l:"Mok"},
+  {id:"dagbestek",l:"Mes, lepel en vork",t:"Tip: spork."},
+  {id:"hoofdbedekking",l:"Zonnebril en/of hoofdbedekking",t:"Tip van de crew."}
+ ]}
+];
+
+var sharedSections=[
+ {id:"tent",icon:"⛺",title:"Slapen",badge:"1 per koppel",items:[
+  {id:"tent",l:"Tent 🔥",t:"Lenen of huren via Surviking kan prima."},
+  {id:"hamer",l:"Evt. hamer voor het vastzetten van de haringen"}
+ ]}
+];
+
+var extraSections=[
+ {id:"slim",icon:"🪶",title:"Slim &amp; licht",items:[
+  {id:"drybag",l:"Drybag of 2 stevige vuilniszakken",t:"Natte kleding (en badkleding!) apart houden, en extra regenbescherming ín je backpack."},
+  {id:"ziplock",l:"Paar extra ziplockzakjes",t:"Voor papieren, telefoon en alles wat droog moet blijven."},
+  {id:"powerbank",l:"Kleine powerbank",t:"Je telefoon wordt tijdens het programma gebruikt — dan wil je hem vol hebben."},
+  {id:"ducttape",l:"Stukje ducttape (om je waterfles gewikkeld)",t:"Repareert tent, schoen of slaapmat zonder extra gewicht."},
+  {id:"lijntje",l:"Stukje paracord/waslijn + 2 knijpers",t:"Natte kleding en badkleding drogen in het bivak."}
+ ]},
+ {id:"comfort",icon:"🔥",title:"Comfort in het bivak",items:[
+  {id:"oordoppen",l:"Oordoppen (voor jullie allebei)",t:"Wind, gesnurk uit de buurtent… je slaapt er beter door."},
+  {id:"zitmatje",l:"Opvouwbaar zitmatje",t:"Luxere upgrade van de plastic zak om op te zitten."},
+  {id:"lippen",l:"Lippenbalsem",t:"Wind en zon — je lippen merken het als eerste."},
+  {id:"handgel",l:"Desinfecterende handgel",t:"Buiten koken en eten zonder wasbak in de buurt."}
+ ]}
+];
+
+var weather=[
+ ["vr 18 sep","🌦️","12–18°","70% kans op buien · stevige westenwind"],
+ ["za 19 sep","🌦️","15–20°","70% kans op buien · stevige zuidwestenwind"],
+ ["zo 20 sep","🌧️","15–18°","90% kans op buien · harde westenwind"]
+];
+
+var rules=[
+ ["⚖️","<b>Backpack: 70–90 liter en max 15 kg per persoon</b> (geen koffer). Alles zit ín de tas — er hangt niks aan de buitenkant. Regenhoes erom."],
+ ["🎒","<b>Dagrugzak mét heupband: 1 per persoon, ±5 kg / 20 liter,</b> zo klein mogelijk. Je kunt pas 's avonds laat bij je backpack — dus ook je warme avondkleding in je dagrugzak, zelfs bij mooi weer."],
+ ["📦","<b>Houd ruimte over:</b> bij de start krijg je van 4M nog een paar kleine extra items om mee te nemen."],
+ ["🔥","<b>Huren of lenen in plaats van kopen:</b> items met 🔥 huur je via <a href=\"https://www.surviking.nl/pro/4m\" target=\"_blank\" rel=\"noopener\">Surviking</a>. Lenen van bekenden of tweedehands via Marktplaats is ook prima — aanschaf voor eenmalig gebruik is zonde van het geld."],
+ ["📱","<b>Telefoon mag mee en wordt tijdens het programma gebruikt</b> — zorg dat hij opgeladen is. Verder alleen gebruiken als het echt nodig is: de focus ligt op elkaar. Overige waardevolle spullen laat je thuis of (op eigen risico) in de auto."],
+ ["🌦️","<b>Houd zelf het weerbericht in de gaten</b> en pas je kledinglagen erop aan."],
+ ["🚭","<b>Alcohol, drugs en sigaretten zijn niet toegestaan</b> op het weekend."],
+ ["🚶","<b>Fit-check:</b> jullie moeten als koppel 10 km aaneengesloten kunnen lopen met al je bagage (al dan niet eerlijk verdeeld)."]
+];
+
+/* ───────── state ───────── */
+var state={names:["Ik","Partner"],checks:{},missing:{},hide:false};
+try{
+  var raw=localStorage.getItem(STORE_KEY);
+  if(raw){var p=JSON.parse(raw);
+    if(p&&typeof p==="object"){
+      if(Array.isArray(p.names)&&p.names.length===2)state.names=p.names;
+      if(p.checks&&typeof p.checks==="object")state.checks=p.checks;
+      if(p.missing&&typeof p.missing==="object")state.missing=p.missing;
+      state.hide=!!p.hide;
+    }
+  }
+}catch(e){}
+function save(){try{localStorage.setItem(STORE_KEY,JSON.stringify(state));}catch(e){}}
+
+/* ───────── helpers ───────── */
+function esc(s){return s.replace(/&(?!amp;)/g,"&amp;").replace(/</g,"&lt;");}
+function keyFor(scope,secId,itemId){return scope+":"+secId+":"+itemId;}
+function sectionsFor(scope){
+  return scope==="s"?sharedSections:scope==="e"?extraSections:personSections;
+}
+function totals(scope){
+  var secs=sectionsFor(scope),done=0,tot=0;
+  secs.forEach(function(sec){sec.items.forEach(function(it){
+    tot++;if(state.checks[keyFor(scope,sec.id,it.id)])done++;
+  });});
+  return[done,tot];
+}
+var tabsDef=[
+ {id:"p0",kind:"person"},
+ {id:"p1",kind:"person"},
+ {id:"s",kind:"shared",label:"Samen"},
+ {id:"e",kind:"extra",label:"Extra"},
+ {id:"tips",kind:"tips",label:"Tips"}
+];
+var activeTab="p0";
+
+/* ───────── render ───────── */
+var tabsEl=document.getElementById("tabs");
+var mainEl=document.getElementById("main");
+
+function renderTabs(){
+  tabsEl.innerHTML="";
+  tabsDef.forEach(function(td){
+    var b=document.createElement("button");
+    b.className="tab"+(td.id===activeTab?" active":"");
+    var name=td.kind==="person"?state.names[td.id==="p0"?0:1]:td.label;
+    var sub="";
+    if(td.kind!=="tips"){
+      var t=totals(td.id),rest=t[1]-t[0];
+      sub=rest===0?'<span class="rest klaar">✔ klaar</span>':'<span class="rest">nog '+rest+'</span>';
+    }else{sub='<span class="rest">&amp; weer</span>';}
+    b.innerHTML="<span>"+esc(name)+"</span>"+sub;
+    b.addEventListener("click",function(){activeTab=td.id;renderAll();window.scrollTo(0,0);});
+    tabsEl.appendChild(b);
+  });
+}
+
+function renderHeader(){
+  var d=0,t=0;
+  ["p0","p1","s"].forEach(function(sc){var r=totals(sc);d+=r[0];t+=r[1];});
+  document.getElementById("pfill").style.width=(t?Math.round(d/t*100):0)+"%";
+  document.getElementById("pcount").textContent=d+" / "+t+" ingepakt";
+}
+
+function sectionEl(scope,sec){
+  var wrap=document.createElement("div");wrap.className="sec";
+  var done=0;
+  var itemsHtml="";
+  sec.items.forEach(function(it){
+    var k=keyFor(scope,sec.id,it.id),c=!!state.checks[k],m=!!state.missing[k];
+    if(c)done++;
+    if(state.hide&&c)return;
+    itemsHtml+='<div class="item'+(c?" done":"")+(m?" miss":"")+'" data-k="'+k+'">'
+      +'<div class="box">'+(c?"✓":"")+'</div>'
+      +'<div class="txt"><div class="lbl">'+it.l+(m?' <span class="koop">· nog kopen</span>':'')+'</div>'
+      +(it.t?'<div class="tip">'+it.t+'</div>':'')
+      +'</div>'
+      +'<button class="cart" data-mk="'+k+'" title="Heb ik niet — zet op de boodschappenlijst">🛒</button>'
+      +'</div>';
+  });
+  if(done===sec.items.length)wrap.classList.add("klaar");
+  wrap.innerHTML='<div class="sec-h"><span class="t">'+sec.icon+' '+sec.title
+    +(sec.badge?' <span class="badge">'+sec.badge+'</span>':'')
+    +'</span><span class="cnt">'+done+'/'+sec.items.length+'</span></div>'
+    +(itemsHtml||"");
+  wrap.querySelectorAll(".item").forEach(function(el){
+    el.addEventListener("click",function(){
+      var k=el.getAttribute("data-k");
+      state.checks[k]=!state.checks[k];
+      if(!state.checks[k])delete state.checks[k];
+      else delete state.missing[k];
+      save();renderAll();
+    });
+  });
+  wrap.querySelectorAll(".cart").forEach(function(el){
+    el.addEventListener("click",function(ev){
+      ev.stopPropagation();
+      var k=el.getAttribute("data-mk");
+      if(state.missing[k]){delete state.missing[k];}
+      else{state.missing[k]=true;delete state.checks[k];}
+      save();renderAll();
+    });
+  });
+  return wrap;
+}
+
+function renderPanel(){
+  mainEl.innerHTML="";
+  var panel=document.createElement("div");panel.className="panel active";
+
+  if(activeTab==="tips"){
+    panel.className+=" tips";
+    var wx=document.createElement("div");wx.className="sec";
+    wx.innerHTML='<div class="wx-title"><span>🌦️ Weer bij Lauwersoog dit weekend</span></div>'
+      +weather.map(function(w){
+        return '<div class="wx-row"><span class="d">'+w[0]+'</span><span class="ic">'+w[1]+'</span><span class="tmp">'+w[2]+'</span><span class="rest">'+w[3]+'</span></div>';
+      }).join("")
+      +'<div class="wx-advies"><b>Kortom: wisselvallig, buien en flinke wind.</b> Regenjas én regenbroek mee, warme laag voor \u2019s avonds (het koelt af tot ±12°), regenhoes om je backpack en zet de tent goed vast.</div>'
+      +'<div class="wx-foot">Verwachting van woensdag 17 sep · check vlak voor vertrek nog even de buienradar.</div>';
+    panel.appendChild(wx);
+    var motto=document.createElement("div");motto.className="motto";
+    motto.textContent="“Verplichte uitrusting. Niet meer en niet minder.”";
+    panel.appendChild(motto);
+    var sec=document.createElement("div");sec.className="sec";
+    sec.innerHTML=rules.map(function(r){
+      return '<div class="rule"><span class="ic">'+r[0]+'</span><p>'+r[1]+'</p></div>';
+    }).join("");
+    panel.appendChild(sec);
+    var reset=document.createElement("button");reset.className="reset";
+    reset.textContent="Alle vinkjes wissen";
+    var armed=false;
+    reset.addEventListener("click",function(){
+      if(!armed){armed=true;reset.classList.add("arm");reset.textContent="Zeker weten? Tik nog een keer om alles te wissen";
+        setTimeout(function(){armed=false;reset.classList.remove("arm");reset.textContent="Alle vinkjes wissen";},4000);
+        return;}
+      state.checks={};state.missing={};save();activeTab="p0";renderAll();
+    });
+    panel.appendChild(reset);
+    mainEl.appendChild(panel);
+    return;
+  }
+
+  var scope=activeTab;
+  var isPerson=(scope==="p0"||scope==="p1");
+  var secs=sectionsFor(scope);
+
+  if(scope==="e"){
+    var note=document.createElement("div");note.className="extra-note";
+    note.innerHTML="<b>Niet verplicht, wel slim.</b> De officiële lijst zegt \u201cniet meer en niet minder\u201d — dus alleen meenemen wat klein en licht is en wat jullie écht gaan gebruiken.";
+    panel.appendChild(note);
+  }
+
+  var head=document.createElement("div");head.className="panel-head";
+  var nameHtml;
+  if(isPerson){
+    var idx=scope==="p0"?0:1;
+    nameHtml='<span class="pname"><span id="nm">'+esc(state.names[idx])+'</span>'
+      +'<button id="rn" title="Naam aanpassen">✏️</button></span>';
+  }else if(scope==="e"){
+    nameHtml='<span class="pname">Extra · aanbevelingen</span>';
+  }else{
+    nameHtml='<span class="pname">Samen · 1 per koppel</span>';
+  }
+  head.innerHTML=nameHtml
+    +'<label class="hidecheck"><input type="checkbox" id="hd"'+(state.hide?" checked":"")+'> verberg ingepakt</label>';
+  panel.appendChild(head);
+
+  var allDone=true;
+  secs.forEach(function(sec){
+    var el=sectionEl(scope,sec);
+    if(!el.classList.contains("klaar"))allDone=false;
+    panel.appendChild(el);
+  });
+  if(allDone){
+    var ok=document.createElement("div");ok.className="allklaar";ok.style.display="block";
+    ok.innerHTML='<span class="big">🏕️</span>'+(isPerson?esc(state.names[scope==="p0"?0:1])+" is helemaal ingepakt!":(scope==="e"?"Alle extra's zijn ingepakt!":"Jullie zijn samen helemaal ingepakt!"));
+    panel.appendChild(ok);
+  }
+  mainEl.appendChild(panel);
+
+  var hd=document.getElementById("hd");
+  if(hd)hd.addEventListener("change",function(){state.hide=hd.checked;save();renderAll();});
+  var rn=document.getElementById("rn");
+  if(rn)rn.addEventListener("click",function(){
+    var idx=scope==="p0"?0:1;
+    var nm=document.getElementById("nm");
+    var inp=document.createElement("input");
+    inp.value=state.names[idx];inp.maxLength=14;
+    nm.replaceWith(inp);inp.focus();inp.select();
+    function commit(){
+      var v=inp.value.trim();
+      if(v)state.names[idx]=v;
+      save();renderAll();
+    }
+    inp.addEventListener("blur",commit);
+    inp.addEventListener("keydown",function(e){if(e.key==="Enter")inp.blur();});
+  });
+}
+
+/* ── boodschappenlijst ── */
+var fab=document.getElementById("fab"),fabn=document.getElementById("fabn"),
+    ovl=document.getElementById("ovl"),shopEl=document.getElementById("shoplist"),
+    copyBtn=document.getElementById("copyshop");
+
+function findItem(scope,secId,itemId){
+  var secs=sectionsFor(scope);
+  for(var i=0;i<secs.length;i++){
+    if(secs[i].id!==secId)continue;
+    for(var j=0;j<secs[i].items.length;j++){
+      if(secs[i].items[j].id===itemId)return secs[i].items[j];
+    }
+  }
+  return null;
+}
+function shopGroups(){
+  var groups=[
+    {scope:"p0",title:"Voor "+state.names[0],items:[]},
+    {scope:"p1",title:"Voor "+state.names[1],items:[]},
+    {scope:"s",title:"Samen (1 per koppel)",items:[]},
+    {scope:"e",title:"Extra",items:[]}
+  ];
+  Object.keys(state.missing).forEach(function(k){
+    var parts=k.split(":");if(parts.length!==3)return;
+    var it=findItem(parts[0],parts[1],parts[2]);if(!it)return;
+    groups.forEach(function(g){if(g.scope===parts[0])g.items.push({k:k,l:it.l});});
+  });
+  return groups.filter(function(g){return g.items.length});
+}
+function plainLabel(l){
+  var d=document.createElement("div");d.innerHTML=l;
+  return d.textContent.replace(/🔥/g,"").trim();
+}
+function renderShop(){
+  var groups=shopGroups();
+  if(!groups.length){
+    shopEl.innerHTML='<div class="empty-shop">🎉 Niks meer nodig — alles is in huis!</div>';
+    return;
+  }
+  shopEl.innerHTML=groups.map(function(g){
+    return '<div class="shop-group">'+esc(g.title)+'</div>'+g.items.map(function(it){
+      var q=encodeURIComponent("decathlon "+plainLabel(it.l).split("(")[0].trim());
+      return '<div class="shop-item"><div class="lbl">'+it.l
+        +'<a href="https://www.google.com/search?q='+q+'" target="_blank" rel="noopener">zoek online ›</a></div>'
+        +'<button class="geregeld" data-gk="'+it.k+'">✓ geregeld</button></div>';
+    }).join("");
+  }).join("");
+  shopEl.querySelectorAll(".geregeld").forEach(function(b){
+    b.addEventListener("click",function(){
+      delete state.missing[b.getAttribute("data-gk")];
+      save();renderAll();renderShop();
+    });
+  });
+}
+function shopText(){
+  var lines=["🛒 Boodschappenlijst — Couples Experience",""];
+  shopGroups().forEach(function(g){
+    lines.push(g.title+":");
+    g.items.forEach(function(it){lines.push("– "+plainLabel(it.l));});
+    lines.push("");
+  });
+  return lines.join("\n").trim();
+}
+fab.addEventListener("click",function(){renderShop();ovl.classList.add("show");});
+document.getElementById("ovlx").addEventListener("click",function(){ovl.classList.remove("show");});
+ovl.addEventListener("click",function(e){if(e.target===ovl)ovl.classList.remove("show");});
+copyBtn.addEventListener("click",function(){
+  var t=shopText(),ok=false;
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(t);ok=true;
+    }
+  }catch(e){}
+  if(!ok){
+    try{
+      var ta=document.createElement("textarea");ta.value=t;
+      document.body.appendChild(ta);ta.select();
+      document.execCommand("copy");document.body.removeChild(ta);ok=true;
+    }catch(e2){}
+  }
+  copyBtn.textContent=ok?"Gekopieerd ✓":"Kopiëren lukt niet — maak een screenshot";
+  setTimeout(function(){copyBtn.textContent="Kopieer lijst";},2500);
+});
+function renderFab(){
+  var n=Object.keys(state.missing).length;
+  fabn.textContent=n;
+  fab.classList.toggle("show",n>0);
+  if(n===0)ovl.classList.remove("show");
+}
+
+function renderAll(){renderTabs();renderHeader();renderPanel();renderFab();}
+renderAll();
+})();
+</script>
+</body>
+</html>
